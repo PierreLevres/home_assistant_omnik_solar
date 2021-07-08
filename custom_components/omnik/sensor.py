@@ -26,7 +26,7 @@ import struct
 import sys
 
 # VERSION
-VERSION = '0.0.5'
+VERSION = '0.0.6'
 
 BASE_URL = 'http://{0}:{1}{2}'
 
@@ -252,7 +252,7 @@ class OmnikData(object):
     self.get_statistics()
     
     """ Retrieve the data values for the sensors. """
-    self.update_sensor_values()
+    if self.interface_inverter.raw_msg is not None: self.update_sensor_values()
 
 class OmnikInverter():
   """ Class with function for reading data from the Omnik inverter. """
@@ -304,6 +304,7 @@ class OmnikInverter():
     
     try:
       """ Connect to server and send data. """
+      sock.settimeout(10)
       sock.connect((self._host, self._port))
       sock.sendall(OmnikInverter.generate_request(self._serial_number))
       
